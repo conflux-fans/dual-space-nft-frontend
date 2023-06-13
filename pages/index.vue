@@ -1,23 +1,66 @@
 <template>
-  <n-button type="info" @click="authorize">authorize</n-button>
-  <n-button v-if="pendingAuthorization" @click="refreshCode">
-    refreshCode
-  </n-button>
-  <n-input v-model:value="username" placeholder="github username" />
-  <n-button type="success" :disabled="!code || !username" @click="visitOracle">
-    visit oracle
-  </n-button>
+  <n-card title="mint" size="medium" hoverable>
+    <template #header-extra>
+      mint poap if you had permission
+    </template>
+    <!-- TODO: add verification here -->
+    <n-space>
+      <n-input-number v-model:value="batchNbr" placeholder="batch number" :step="100" />
+      <n-input v-model:value="coreOwnerAddress" placeholder="core owner" />
+      <n-input v-model:value="evmOwnerAddress" placeholder="evm owner" />
+    </n-space>
+    <n-space>
+      <n-button v-if="!code" type="info" @click="authorize">
+        <template #icon>
+          <LogoGithub />
+        </template>
+        one-shot authorize
+      </n-button>
+      <n-button v-if="pendingAuthorization" @click="refreshCode">
+        <template #icon>
+          <Renew />
+        </template>
+        refreshCode
+      </n-button>
+      <n-button v-if="!!code" type="success" @click="doMint">
+        doMint
+      </n-button>
+    </n-space>
+
+    <a v-if="txHash" target="_blank" :href="scanTxUrl">{{ txHash }}</a>
+  </n-card>
 </template>
 
 <script setup lang="ts">
-import { NButton, NInput } from "naive-ui";
+import { NButton, NInput, NInputNumber, NCard, NSpace } from "naive-ui";
+import { LogoGithub, Renew } from "@vicons/carbon";
 import Axios from "axios";
+import { abi } from "@/assets/metadata/DualSpaceNFTCore.json";
+
+onMounted(() => {
+  window.setInterval(() => refreshCode(), 300)
+  // refreshCode()
+})
+
+const batchNbr = ref(20896286)
+const coreOwnerAddress = ref("cfx:aanhtnrex2nj56kkbws4yx0jeab34ae16pjn9n92xx")
+const evmOwnerAddress = ref("0x4677ADa49E168df1290C9daA4EC820039D0097E3")
+
+const conflux = useCoreSdk()
+
+const randomSender = useRandomCoreSender()
 
 const code = ref("" as string | null);
-const username = ref("")
-
 const pendingAuthorization = ref(false);
 
+const txHash = ref("")
+const scanTxUrl = computed(() => {
+  return `https://testnet.confluxscan.io/transaction/${txHash.value}`
+})
+
+// pendingAuthorization is not !code
+// click authorize => pendingAuthorization set to true
+// code value got => pendingAuthorization set to false
 function refreshCode() {
   code.value = localStorage.getItem("code");
   if (code.value) {
@@ -38,6 +81,25 @@ function openGithubAuthorizationWindow() {
   pendingAuthorization.value = true;
 }
 
+async function doMint() {
+  try {
+    const { username, signature } = await visitOracle()
+    const coreContract = conflux.value.Contract({
+      abi,
+      address: "CFXTEST:TYPE.CONTRACT:ACHGW6Y86K619AWAYY47C20PNTDB0Y3PDYJHA6BXRX"
+    })
+    // mint(uint128 batchNbr, string memory username, address ownerCoreAddress, bytes20 ownerEvmAddress, Signature memory oracleSignature)
+    txHash.value = await coreContract.mint(
+      batchNbr.value, username, coreOwnerAddress.value, evmOwnerAddress.value, [signature.v, signature.r, signature.s]
+    ).sendTransaction({
+      from: randomSender.value.address
+    })
+  } catch (e) {
+    console.trace(e)
+    window.alert(e)
+  }
+}
+
 async function visitOracle() {
   const state = localStorage.getItem("state");
   const code = localStorage.getItem("code");
@@ -46,18 +108,32 @@ async function visitOracle() {
       url: `http://localhost:8000/sign/${state}`,
       method: "POST",
       data: {
-        batch_nbr: 20230401,
-        username: username.value,
-        core_address: "cfx:aanhtnrex2nj56kkbws4yx0jeab34ae16pjn9n92xx",
-        evm_address: "0x4677ADa49E168df1290C9daA4EC820039D0097E3",
+        batch_nbr: batchNbr.value,
+        core_address: coreOwnerAddress.value,
+        evm_address: evmOwnerAddress.value,
         code,
       },
     });
+    console.log(response)
     console.log(response.data);
-  } finally {
+    return response.data as {
+      signature: {
+        v: number,
+        r: string,
+        s: string,
+      },
+      username: string
+    }
+  }
+  catch (e: any) {
+    window.alert(e?.response?.data?.detail)
+    throw e
+  }
+  finally {
     localStorage.removeItem("state");
     localStorage.removeItem("code");
     refreshCode();
   }
 }
+
 </script>

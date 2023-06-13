@@ -11,7 +11,11 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/node": "^18",
+    "@vicons/carbon": "^0.12.0",
     "naive-ui": "^2.34.4",
-    "nuxt": "^3.5.2"
+    "nuxt": "^3.5.3"
+  },
+  "dependencies": {
+    "js-conflux-sdk": "^2.1.10"
   }
 }

@@ -1,14 +1,19 @@
 <template>
   <div>
-    <n-space vertical size="large">
-      <n-layout>
-        <n-layout-header position="absolute">header</n-layout-header>
-        <n-layout-content embedded content-style="padding: 24px;">
-          <NuxtPage />
-        </n-layout-content>
-        <n-layout-footer>footer</n-layout-footer>
-      </n-layout>
-    </n-space>
+    <NuxtLayout>
+      <n-space vertical size="large">
+        <n-layout>
+          <n-layout-header>
+            <AppNavbar></AppNavbar>
+          </n-layout-header>
+          <n-layout-content content-style="padding: 24px;">
+            <NuxtPage />
+          </n-layout-content>
+          <n-layout-footer>footer</n-layout-footer>
+        </n-layout>
+      </n-space>
+
+    </NuxtLayout>
   </div>
 </template>
 <script setup lang="ts">
