@@ -4,42 +4,55 @@
       mint poap if you had permission
     </template>
     <!-- TODO: add verification here -->
-    <n-space>
-      <n-input-number v-model:value="batchNbr" placeholder="batch number" :step="100" />
-      <n-input v-model:value="coreOwnerAddress" placeholder="core owner" />
-      <n-input v-model:value="evmOwnerAddress" placeholder="evm owner" />
-    </n-space>
-    <n-space>
-      <n-button v-if="!code" type="info" @click="authorize">
-        <template #icon>
-          <LogoGithub />
-        </template>
-        one-shot authorize
-      </n-button>
-      <n-button v-if="pendingAuthorization" @click="refreshCode">
-        <template #icon>
-          <Renew />
-        </template>
-        refreshCode
-      </n-button>
-      <n-button v-if="!!code" type="success" @click="doMint">
-        doMint
-      </n-button>
-    </n-space>
+    <n-space vertical>
+      <n-input-group>
+        <n-input-group-label>Batch Number</n-input-group-label>
+        <n-input-number v-model:value="batchNbr" placeholder="batch number" :step="100" />
+      </n-input-group>
+      <n-input-group>
+        <n-input-group-label>Your Core Address</n-input-group-label>
+        <n-input v-model:value="coreOwnerAddress" placeholder="core owner" />
+        <n-button secondary type="info">use fluent address</n-button>
+        <n-button secondary type="warning">use empty core address</n-button>
+      </n-input-group>
+      <n-input-group>
+        <n-input-group-label>Your eSpace Address</n-input-group-label>
+        <n-input v-model:value="evmOwnerAddress" placeholder="evm owner" />
+        <n-button secondary type="info">use metamask address</n-button>
+        <n-button secondary type="warning">use empty evm address</n-button>
+      </n-input-group>
 
+      <n-space>
+        <n-button v-if="!code" type="info" @click="authorize">
+          <template #icon>
+            <LogoGithub />
+          </template>
+          one-shot authorize
+        </n-button>
+        <n-button v-if="pendingAuthorization" @click="refreshCode">
+          <template #icon>
+            <Renew />
+          </template>
+          refreshCode
+        </n-button>
+        <n-button v-if="!!code" type="success" @click="doMint">
+          doMint
+        </n-button>
+      </n-space>
+    </n-space>
     <a v-if="txHash" target="_blank" :href="scanTxUrl">{{ txHash }}</a>
   </n-card>
 </template>
 
 <script setup lang="ts">
-import { NButton, NInput, NInputNumber, NCard, NSpace } from "naive-ui";
+import { NButton, NInput, NInputNumber, NCard, NSpace, NInputGroup, NInputGroupLabel } from "naive-ui";
 import { LogoGithub, Renew } from "@vicons/carbon";
 import Axios from "axios";
 import { abi } from "@/assets/metadata/DualSpaceNFTCore.json";
 
 onMounted(() => {
+  // poll localstorage status
   window.setInterval(() => refreshCode(), 300)
-  // refreshCode()
 })
 
 const batchNbr = ref(20896286)
