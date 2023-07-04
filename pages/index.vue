@@ -1,4 +1,5 @@
 <template>
   <MintCard />
+  <SetCoreOwnerCard />
   
 </template>

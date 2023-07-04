@@ -55,7 +55,9 @@ onMounted(() => {
   window.setInterval(() => refreshCode(), 300)
 })
 
-const batchNbr = ref(20896286)
+const runtimeConfig = useRuntimeConfig()
+
+const batchNbr = ref(20635690)
 const coreOwnerAddress = ref("cfx:aanhtnrex2nj56kkbws4yx0jeab34ae16pjn9n92xx")
 const evmOwnerAddress = ref("0x4677ADa49E168df1290C9daA4EC820039D0097E3")
 
@@ -89,7 +91,7 @@ function openGithubAuthorizationWindow() {
   // TODO: state should be unguessable
   const state = new Date().getTime();
   localStorage.setItem("state", state.toString());
-  const url = `https://github.com/login/oauth/authorize?client_id=d0c381ebc79d32d0ed38&redirect_uri=http://localhost:3000/callback&state=${state}`;
+  const url = `https://github.com/login/oauth/authorize?client_id=${runtimeConfig.public.clientId}&redirect_uri=http://localhost:3000/callback&state=${state}`;
   window.open(url, "_blank", "popup,width=480,height=640");
   pendingAuthorization.value = true;
 }
@@ -97,16 +99,19 @@ function openGithubAuthorizationWindow() {
 async function doMint() {
   try {
     const { username, signature } = await visitOracle()
-    const coreContract = conflux.value.Contract({
-      abi,
-      address: "CFXTEST:TYPE.CONTRACT:ACHGW6Y86K619AWAYY47C20PNTDB0Y3PDYJHA6BXRX"
-    })
-    // mint(uint128 batchNbr, string memory username, address ownerCoreAddress, bytes20 ownerEvmAddress, Signature memory oracleSignature)
-    txHash.value = await coreContract.mint(
-      batchNbr.value, username, coreOwnerAddress.value, evmOwnerAddress.value, [signature.v, signature.r, signature.s]
-    ).sendTransaction({
-      from: randomSender.value.address
-    })
+    // const coreContract = conflux.value.Contract({
+    //   abi,
+    //   address: "CFXTEST:TYPE.CONTRACT:ACHGW6Y86K619AWAYY47C20PNTDB0Y3PDYJHA6BXRX"
+    // })
+    // // mint(uint128 batchNbr, string memory username, address ownerCoreAddress, bytes20 ownerEvmAddress, Signature memory oracleSignature)
+    // txHash.value = await coreContract.mint(
+    //   batchNbr.value, username, coreOwnerAddress.value, evmOwnerAddress.value, [signature.v, signature.r, signature.s]
+    // ).sendTransaction({
+    //   from: randomSender.value.address
+    // })
+    txHash.value = await doMintFromCoreRandom(
+      batchNbr.value, username, coreOwnerAddress.value, evmOwnerAddress.value, signature.v, signature.r, signature.s
+    )
   } catch (e) {
     console.trace(e)
     window.alert(e)
