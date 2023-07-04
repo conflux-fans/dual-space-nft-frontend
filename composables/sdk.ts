@@ -21,17 +21,23 @@ const coreContract: Contract = coreSdk.Contract({
 async function doMintFromCoreRandom(
   batchNbr: number,
   username: string,
-  coreOwnerAddress: string,
-  evmOwnerAddress: string,
+  coreOwnerAddress: string | "",
+  evmOwnerAddress: string | "",
   v: number,
   r: string,
   s: string
 ): Promise<string> {
-  return await coreContract
-    .mint(batchNbr, username, coreOwnerAddress, evmOwnerAddress, [v, r, s])
-    .sendTransaction({
-      from: randomCoreSender.address,
-    });
+  if (coreOwnerAddress === "") {
+    coreOwnerAddress = "0x0000000000000000000000000000000000000000";
+  }
+  if (evmOwnerAddress === "") {
+    evmOwnerAddress = "0x0000000000000000000000000000000000000000";
+  }
+    return await coreContract
+      .mint(batchNbr, username, coreOwnerAddress, evmOwnerAddress, [v, r, s])
+      .sendTransaction({
+        from: randomCoreSender.address,
+      });
 }
 
 async function getMetatransactionNonce(evmAddress: string) {

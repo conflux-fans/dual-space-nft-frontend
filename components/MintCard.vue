@@ -1,26 +1,56 @@
 <template>
-  <n-card title="mint" size="medium" hoverable>
-    <template #header-extra>
-      mint poap if you had permission
-    </template>
+  <n-card title="Mint" size="medium" hoverable>
+    <template #header-extra> mint poap if you had permission </template>
     <!-- TODO: add verification here -->
     <n-space vertical>
       <n-input-group>
         <n-input-group-label>Batch Number</n-input-group-label>
-        <n-input-number v-model:value="batchNbr" placeholder="batch number" :step="100" />
+        <n-input-number
+          v-model:value="batchNbr"
+          placeholder="batch number"
+          :step="100"
+        />
       </n-input-group>
-      <n-input-group>
-        <n-input-group-label>Your Core Address</n-input-group-label>
-        <n-input v-model:value="coreOwnerAddress" placeholder="core owner" />
-        <n-button secondary type="info">use fluent address</n-button>
-        <n-button secondary type="warning">use empty core address</n-button>
-      </n-input-group>
-      <n-input-group>
-        <n-input-group-label>Your eSpace Address</n-input-group-label>
-        <n-input v-model:value="evmOwnerAddress" placeholder="evm owner" />
-        <n-button secondary type="info">use metamask address</n-button>
-        <n-button secondary type="warning">use empty evm address</n-button>
-      </n-input-group>
+      <n-radio-group v-model:value="mintChoice" name="mintChoiceGroup">
+        <n-radio
+          v-for="mintOption in mintOptions"
+          :key="mintOption.value"
+          :value="mintOption.value"
+          :label="mintOption.label"
+        />
+      </n-radio-group>
+      <n-collapse-transition :show="mintChoice === 'both'">
+        WARNING: core address and espace address shares equal authority.
+        Poap will not be transferrable until one side owner is resetted.
+      </n-collapse-transition>
+      <n-collapse-transition :show="mintChoice !== 'evm'">
+        <n-input-group>
+          <n-input-group-label>Your Core Address</n-input-group-label>
+          <n-input clearable v-model:value="coreOwnerAddress" placeholder="core owner" />
+          <n-button round secondary type="info"  @click="useFluentAccount">
+            <template #icon>
+              <n-icon>
+                <FluentIcon></FluentIcon>
+              </n-icon>
+            </template>
+          </n-button>
+          <!-- <n-button secondary type="warning">use empty core address</n-button> -->
+        </n-input-group>
+      </n-collapse-transition>
+      <n-collapse-transition :show="mintChoice !== 'core'">
+        <n-input-group>
+          <n-input-group-label>Your eSpace Address</n-input-group-label>
+          <n-input clearable v-model:value="evmOwnerAddress" placeholder="evm owner" />
+          <n-button round secondary type="warning"  @click="useMetamaskAccount">
+            <template #icon>
+              <n-icon>
+                <MetaMaskIcon />
+              </n-icon>
+            </template>
+          </n-button>
+          <!-- <n-button secondary type="warning">use empty evm address</n-button> -->
+        </n-input-group>
+      </n-collapse-transition>
 
       <n-space>
         <n-button v-if="!code" type="info" @click="authorize">
@@ -35,7 +65,7 @@
           </template>
           refreshCode
         </n-button>
-        <n-button v-if="!!code" type="success" @click="doMint">
+        <n-button v-if="!!code" type="success" :disabled="isMint" @click="doMint">
           doMint
         </n-button>
       </n-space>
@@ -45,32 +75,90 @@
 </template>
 
 <script setup lang="ts">
-import { NButton, NInput, NInputNumber, NCard, NSpace, NInputGroup, NInputGroupLabel } from "naive-ui";
+import {
+  NButton,
+  NInput,
+  NInputNumber,
+  NIcon,
+  NCard,
+  NSpace,
+  NInputGroup,
+  NInputGroupLabel,
+  NRadio,
+  NRadioGroup,
+  NCollapseTransition,
+  useNotification
+} from "naive-ui";
 import { LogoGithub, Renew } from "@vicons/carbon";
+import { useAccount as useCfxAccount } from "@cfxjs/use-wallet-vue3/conflux";
+import { useAccount as useEthAccount } from "@cfxjs/use-wallet-vue3/ethereum";
+import { format } from "js-conflux-sdk"
 import Axios from "axios";
-import { abi } from "@/assets/metadata/DualSpaceNFTCore.json";
+
+const cfxAccount = useCfxAccount()
+const ethAccount = useEthAccount()
+const notification = useNotification()
+
+function useFluentAccount() {
+  if (cfxAccount.value)
+    coreOwnerAddress.value = cfxAccount.value
+  else {
+    notification.error({ content: "cannot get fluent account" })
+  }
+}
+
+function useMetamaskAccount() {
+  if (ethAccount.value)
+    evmOwnerAddress.value = format.checksumAddress(ethAccount.value)
+  else {
+    notification.error({ content: "cannot get metamask account" })
+  }
+}
+
+const mintChoice = ref("core" as "core" | "evm" | "both");
+const mintOptions = [
+  {
+    value: "core",
+    label: "Mint to Core Space",
+  },
+  {
+    value: "evm",
+    label: "Mint to eSpace",
+  },
+  {
+    value: "both",
+    label: "Mint to Dual Space",
+  },
+];
 
 onMounted(() => {
   // poll localstorage status
-  window.setInterval(() => refreshCode(), 300)
-})
+  window.setInterval(() => refreshCode(), 300);
+});
 
-const runtimeConfig = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig();
 
-const batchNbr = ref(20635690)
-const coreOwnerAddress = ref("cfx:aanhtnrex2nj56kkbws4yx0jeab34ae16pjn9n92xx")
-const evmOwnerAddress = ref("0x4677ADa49E168df1290C9daA4EC820039D0097E3")
-
-const conflux = useCoreSdk()
-
-const randomSender = useRandomCoreSender()
+const batchNbr = ref(20635690);
+const coreOwnerAddress = ref("");
+const evmOwnerAddress = ref("");
 
 const code = ref("" as string | null);
 const pendingAuthorization = ref(false);
 
-const txHash = ref("")
+const txHash = ref("");
 const scanTxUrl = computed(() => {
-  return `https://testnet.confluxscan.io/transaction/${txHash.value}`
+  return `https://testnet.confluxscan.io/transaction/${txHash.value}`;
+});
+
+watch(mintChoice, () => {
+  switch (mintChoice.value) { 
+    case "core":
+      evmOwnerAddress.value = ""
+      return
+    case "evm":
+      coreOwnerAddress.value = ""
+      return
+  }
 })
 
 // pendingAuthorization is not !code
@@ -96,9 +184,12 @@ function openGithubAuthorizationWindow() {
   pendingAuthorization.value = true;
 }
 
+const isMint = ref(false)
+
 async function doMint() {
   try {
-    const { username, signature } = await visitOracle()
+    isMint.value = true
+    const { username, signature } = await visitOracle();
     // const coreContract = conflux.value.Contract({
     //   abi,
     //   address: "CFXTEST:TYPE.CONTRACT:ACHGW6Y86K619AWAYY47C20PNTDB0Y3PDYJHA6BXRX"
@@ -110,11 +201,20 @@ async function doMint() {
     //   from: randomSender.value.address
     // })
     txHash.value = await doMintFromCoreRandom(
-      batchNbr.value, username, coreOwnerAddress.value, evmOwnerAddress.value, signature.v, signature.r, signature.s
-    )
-  } catch (e) {
-    console.trace(e)
-    window.alert(e)
+      batchNbr.value,
+      username,
+      coreOwnerAddress.value,
+      evmOwnerAddress.value,
+      signature.v,
+      signature.r,
+      signature.s
+    );
+  } catch (e: any) {
+    isMint.value = false
+    console.trace(e);
+    notification.error({ content: e.message });
+    if (e?.response?.data?.detail)
+      notification.error({ content: e.response.data.detail });
   }
 }
 
@@ -132,26 +232,23 @@ async function visitOracle() {
         code,
       },
     });
-    console.log(response)
+    console.log(response);
     console.log(response.data);
     return response.data as {
       signature: {
-        v: number,
-        r: string,
-        s: string,
-      },
-      username: string
-    }
-  }
-  catch (e: any) {
-    window.alert(e?.response?.data?.detail)
-    throw e
-  }
-  finally {
+        v: number;
+        r: string;
+        s: string;
+      };
+      username: string;
+    };
+  } catch (e: any) {
+    window.alert(e?.response?.data?.detail);
+    throw e;
+  } finally {
     localStorage.removeItem("state");
     localStorage.removeItem("code");
     refreshCode();
   }
 }
-
 </script>

@@ -44,11 +44,11 @@ function copyTokenId() {
   navigator.clipboard
     .writeText(props.tokenId.toString())
     .then(() => {
-      notification.success({ content: "复制成功!", duration: 3000 });
+      notification.success({ content: "Copied to Clipboard!", duration: 3000 });
     })
     .catch((err) => {
       console.error(err);
-      notification.error({ content: "复制失败!", duration: 3000 });
+      notification.error({ content: "Copy fails!", duration: 3000 });
     });
 }
 </script>
