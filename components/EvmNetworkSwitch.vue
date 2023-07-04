@@ -105,6 +105,7 @@ async function switchToExpectedChain() {
 
 async function guaranteeNetwork() {
   try {
+    await addExpectedChain();
     await switchToExpectedChain();
   } catch (err) {
     if (
