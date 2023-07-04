@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@cfxjs/use-wallet-vue3": "^0.0.1-0",
+    "axios": "^1.4.0",
     "decimal.js": "^10.4.3",
     "js-conflux-sdk": "^2.1.10"
   }

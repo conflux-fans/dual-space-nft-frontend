@@ -1,6 +1,5 @@
 <template>
   <n-space>
-    <n-button text @click="toScan"> {{ account }} </n-button>
     <n-switch
       v-if="chainId"
       v-model:value="active"
@@ -20,6 +19,7 @@
         </n-icon>
       </template>
     </n-switch>
+    <n-button text @click="toScan"> {{ account }} </n-button>
   </n-space>
 </template>
 <script setup lang="ts">
@@ -117,3 +117,4 @@ async function guaranteeNetwork() {
   }
 }
 </script>
+~/utils/scan

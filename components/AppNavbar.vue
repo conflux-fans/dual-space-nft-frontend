@@ -25,7 +25,6 @@ import { NSpace } from "naive-ui";
 import {
   useStatus as useEthStatus,
 } from "@cfxjs/use-wallet-vue3/ethereum";
-// import { connectWalletWithNetworkSwitching } from "~/composables/evm-connection";
 import {
   useStatus as useCfxStatus,
 } from "@cfxjs/use-wallet-vue3/conflux";
@@ -40,7 +39,7 @@ const cStatus = useCfxStatus();
     <!-- Social icons & Color Mode -->
     <div class="space-x-3 transition text-primary-500">
       <n-space justify="end">
-        <n-space vertical>
+        <n-space vertical justify="end">
           <evm-connection-button
             v-if="eStatus !== 'in-detecting' && eStatus !== 'active'"
             :disabled="eStatus !== 'not-active'"
