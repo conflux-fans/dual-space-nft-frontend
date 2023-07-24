@@ -6,6 +6,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       clientId: "",
+      redirectUri: "",
+      crowdinClientId: "",
+      crowdinRedirectUri: "",
+      oracleUrl: "",
       coreContractAddress: "",
       evmContractAddress: "",
       coreUrl: "",
