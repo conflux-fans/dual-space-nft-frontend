@@ -26,7 +26,7 @@
       <n-collapse-transition :show="mintChoice !== 'evm'">
         <n-input-group>
           <n-input-group-label>Your Core Address</n-input-group-label>
-          <n-input clearable v-model:value="coreOwnerAddress" placeholder="core owner" />
+          <n-input clearable v-model:value="coreOwnerInput" placeholder="core owner" />
           <n-button round secondary type="info"  @click="useFluentAccount">
             <template #icon>
               <n-icon>
@@ -40,7 +40,7 @@
       <n-collapse-transition :show="mintChoice !== 'core'">
         <n-input-group>
           <n-input-group-label>Your eSpace Address</n-input-group-label>
-          <n-input clearable v-model:value="evmOwnerAddress" placeholder="evm owner" />
+          <n-input clearable v-model:value="evmOwnerInput" placeholder="evm owner" />
           <n-button round secondary type="warning"  @click="useMetamaskAccount">
             <template #icon>
               <n-icon>
@@ -115,7 +115,7 @@ const authChoice = ref("crowdin" as "crowdin" | "github")
 
 function useFluentAccount() {
   if (cfxAccount.value)
-    coreOwnerAddress.value = cfxAccount.value
+    coreOwnerInput.value = cfxAccount.value
   else {
     notification.error({ content: "cannot get fluent account" })
   }
@@ -123,7 +123,7 @@ function useFluentAccount() {
 
 function useMetamaskAccount() {
   if (ethAccount.value)
-    evmOwnerAddress.value = format.checksumAddress(ethAccount.value)
+    evmOwnerInput.value = format.checksumAddress(ethAccount.value)
   else {
     notification.error({ content: "cannot get metamask account" })
   }
@@ -153,8 +153,20 @@ onMounted(() => {
 const runtimeConfig = useRuntimeConfig();
 
 const batchNbr = ref(20635690);
-const coreOwnerAddress = ref("");
-const evmOwnerAddress = ref("");
+const coreOwnerInput = ref("");
+const coreOwnerAddress = computed(()=>{
+  if (mintChoice.value === 'evm') {
+    return runtimeConfig.public.coreContractAddress
+  }
+  return coreOwnerInput.value
+})
+const evmOwnerInput = ref("")
+const evmOwnerAddress = computed(()=>{
+  if (mintChoice.value === 'core') {
+    return format.checksumAddress(runtimeConfig.public.evmContractAddress)
+  }
+  return evmOwnerInput.value
+})
 
 const code = ref("" as string | null);
 const pendingAuthorization = ref(false);
@@ -167,10 +179,10 @@ const scanTxUrl = computed(() => {
 watch(mintChoice, () => {
   switch (mintChoice.value) { 
     case "core":
-      evmOwnerAddress.value = ""
+      evmOwnerInput.value = ""
       return
     case "evm":
-      coreOwnerAddress.value = ""
+      coreOwnerInput.value = ""
       return
   }
 })
