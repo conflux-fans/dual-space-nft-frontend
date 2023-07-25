@@ -2,11 +2,13 @@
 
 ## general
 
-- [ ] wait icon after click button
-- [ ] wallet connection
+- [x] wait icon after click button
+- [x] wallet connection
 - [ ] panels
-- [ ] list holded nfts(scan api)
-- [ ] switch chain
+- [x] list holded nfts(scan api)
+- [x] switch chain
 - [ ] permission check
-- [ ] clear core / evm owner
-- [ ] display nft transferrable
+- [x] clear core owner
+- [x] display nft transfer
+- [ ] token inspect panel
+- [x] clear owner

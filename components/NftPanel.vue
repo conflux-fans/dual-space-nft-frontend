@@ -3,19 +3,21 @@
     <template #header-extra>
       Current poap owned by espace owner
     </template>
-    <SinglePoap v-for="(nft, key) in nfts" space="evm" :token-id="nft.tokenId" :contract="nft.contract"/>
+    <n-grid x-gap="12" :cols="3">
+      <n-gi v-for="(nft, key) in nfts">
+        <SinglePoap  space="evm" :token-id="nft.tokenId" :contract="nft.contract"/>
+      </n-gi>
+    </n-grid>
   </n-card>
 </template>
 <script setup lang="ts">
-import { NCard } from "naive-ui";
+import { NCard, NGi, NGrid } from "naive-ui";
 import { useAccount } from "@cfxjs/use-wallet-vue3/ethereum";
 import { queryNfts } from "~/utils/scan";
+import { useEvmNfts } from "~/composables/sdk"
 
 const account = useAccount();
-const nfts = ref([] as {
-  tokenId: string,
-  contract: string
-}[]);
+const nfts = useEvmNfts()
 
 onMounted(async () => {
   await updateNftInfo();

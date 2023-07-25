@@ -93,14 +93,33 @@ async function setCoreOwnerUsingMetatransaction(
     });
 }
 
+async function evmOwnerOf(
+  tokenId: number
+) {
+  return "0x" + bytesToHex(await coreContract
+  .evmOwnerOf(tokenId))
+}
+
+function bytesToHex(bytes: Uint8Array) {
+  return bytes.reduce(function(str, byte) {
+      return str + byte.toString(16).padStart(2, '0');
+  }, '');
+}
+
 const useCoreSdk = () => useState<Conflux>("coreSdk", () => coreSdk);
 const useRandomCoreSender = () =>
   useState<PrivateKeyAccount>("randomCoreSender", () => randomCoreSender);
+const useEvmNfts = () => useState<{
+  tokenId: string,
+  contract: string
+}[]>("evmNfts", () => [])
 
 export {
   useCoreSdk,
+  useEvmNfts,
   useRandomCoreSender,
   doMintFromCoreRandom,
   constructMetatransaction,
   setCoreOwnerUsingMetatransaction,
+  evmOwnerOf
 };
