@@ -152,7 +152,7 @@ onMounted(() => {
 
 const runtimeConfig = useRuntimeConfig();
 
-const batchNbr = ref(20635690);
+const batchNbr = ref(20484047);
 const coreOwnerInput = ref("");
 const coreOwnerAddress = computed(()=>{
   if (mintChoice.value === 'evm') {
