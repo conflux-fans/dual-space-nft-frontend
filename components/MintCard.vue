@@ -33,6 +33,7 @@
                 <FluentIcon></FluentIcon>
               </n-icon>
             </template>
+            Use Core Space Address
           </n-button>
           <!-- <n-button secondary type="warning">use empty core address</n-button> -->
         </n-input-group>
@@ -47,6 +48,7 @@
                 <MetaMaskIcon />
               </n-icon>
             </template>
+            Use eSpace Address
           </n-button>
           <!-- <n-button secondary type="warning">use empty evm address</n-button> -->
         </n-input-group>
