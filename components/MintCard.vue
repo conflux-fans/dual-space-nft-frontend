@@ -80,8 +80,8 @@
           </template>
           refreshCode
         </n-button>
-        <n-button v-if="!!code" type="success" :disabled="isMint" @click="doMint">
-          doMint
+        <n-button v-if="!!code || isMint" type="success" :disabled="isMint" @click="doMint">
+          Do Mint
         </n-button>
       </n-space>
     </n-space>
@@ -236,6 +236,7 @@ async function doMint() {
       signature.r,
       signature.s
     );
+    isMint.value = false
   } catch (e: any) {
     isMint.value = false
     console.trace(e);
