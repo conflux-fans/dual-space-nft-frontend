@@ -24,6 +24,7 @@ export default defineNuxtConfig({
       evmNetworkName: "",
       coreContractName: "",
       coreContractVersion: "",
+      defaultBatchNbr: "",
     },
   },
 });
