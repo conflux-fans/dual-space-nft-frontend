@@ -134,6 +134,7 @@ const setOrReset = ref("set" as "set" | "reset")
               <FluentIcon></FluentIcon>
             </n-icon>
           </template>
+          Use Core Space Address
         </n-button>
       </n-input-group>
       <span v-else>

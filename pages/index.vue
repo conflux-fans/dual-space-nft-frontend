@@ -1,6 +1,6 @@
 <template>
   <MintCard />
-  <SetCoreOwnerCard />
+  <!-- <SetCoreOwnerCard /> -->
   
 </template>
 

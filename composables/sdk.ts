@@ -33,11 +33,12 @@ async function doMintFromCoreRandom(
   if (evmOwnerAddress === "") {
     evmOwnerAddress = "0x0000000000000000000000000000000000000000";
   }
-    return await coreContract
+    const tx = await coreContract
       .mint(batchNbr, username, coreOwnerAddress, evmOwnerAddress, [v, r, s])
       .sendTransaction({
         from: randomCoreSender.address,
       });
+    return tx
 }
 
 async function getMetatransactionNonce(evmAddress: string) {

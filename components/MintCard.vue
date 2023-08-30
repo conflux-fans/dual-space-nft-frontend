@@ -33,6 +33,7 @@
                 <FluentIcon></FluentIcon>
               </n-icon>
             </template>
+            Use Core Space Address
           </n-button>
           <!-- <n-button secondary type="warning">use empty core address</n-button> -->
         </n-input-group>
@@ -47,6 +48,7 @@
                 <MetaMaskIcon />
               </n-icon>
             </template>
+            Use eSpace Address
           </n-button>
           <!-- <n-button secondary type="warning">use empty evm address</n-button> -->
         </n-input-group>
@@ -78,8 +80,8 @@
           </template>
           refreshCode
         </n-button>
-        <n-button v-if="!!code" type="success" :disabled="isMint" @click="doMint">
-          doMint
+        <n-button v-if="!!code || isMint" type="success" :disabled="isMint" @click="doMint">
+          Do Mint
         </n-button>
       </n-space>
     </n-space>
@@ -152,7 +154,7 @@ onMounted(() => {
 
 const runtimeConfig = useRuntimeConfig();
 
-const batchNbr = ref(20484047);
+const batchNbr = ref(Number(runtimeConfig.public.defaultBatchNbr));
 const coreOwnerInput = ref("");
 const coreOwnerAddress = computed(()=>{
   if (mintChoice.value === 'evm') {
@@ -234,6 +236,7 @@ async function doMint() {
       signature.r,
       signature.s
     );
+    isMint.value = false
   } catch (e: any) {
     isMint.value = false
     console.trace(e);
