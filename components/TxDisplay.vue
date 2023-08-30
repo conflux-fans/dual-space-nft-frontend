@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const scanTxUrl = computed(() => {
-  return `https://testnet.confluxscan.io/transaction/${props.txHash}`
+  return scanUrl("core", "transaction", props.txHash)
 })
 
 </script>
