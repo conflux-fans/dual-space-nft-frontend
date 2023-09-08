@@ -175,8 +175,8 @@ const pendingAuthorization = ref(false);
 
 const txHash = ref("");
 const scanTxUrl = computed(() => {
-  return `https://testnet.confluxscan.io/transaction/${txHash.value}`;
-});
+  return scanUrl("core", "transaction", txHash.value)
+})
 
 watch(mintChoice, () => {
   switch (mintChoice.value) { 
