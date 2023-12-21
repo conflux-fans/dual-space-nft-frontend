@@ -1,5 +1,5 @@
 <template>
-  <n-menu :options="menuOptions" default-value="mint"/>
+  <n-menu :options="menuOptions" :value="routerPath"/>
 </template>
 <script setup lang="ts">
 import { NMenu, NIcon } from "naive-ui";
@@ -11,6 +11,10 @@ import MetaMaskIcon from "./MetaMaskIcon.vue";
 function renderIcon (icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
+
+const route = useRoute()
+
+const routerPath = computed(() => { return route.path.replace("/", '') })
 
 const menuOptions: MenuOption[] = [
   {
