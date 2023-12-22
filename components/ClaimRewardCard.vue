@@ -93,13 +93,19 @@ const tokenIdOptions = computed(() => {
           :options="tokenIdOptions"
           :status="tokenIdStatus"
         />
-        <n-button v-if="amountCanClaim!==0n" type="info"
-          @click="claimReward(tokenId)">
-            Claim {{ amountCanClaim }} FC
+        <n-button v-if="tokenId===0" type="info" disabled>
+          Token Not Selected
         </n-button>
-        <n-button v-else type="info" disabled>
-          Cannot Claim or Reward Already Claimed
-        </n-button>
+          <div v-else>
+            <n-button v-if="amountCanClaim!==0n" type="info"
+            @click="claimReward(tokenId)">
+              Claim {{ amountCanClaim }} FC
+          </n-button>
+          <n-button v-else type="info" disabled>
+            Reward Already Claimed
+          </n-button>
+        </div>
+        
       </n-input-group>
     </n-space>
     <TxDisplay :tx-hash="txHash" />
