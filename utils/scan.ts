@@ -60,8 +60,11 @@ async function queryNfts(space: "core" | "evm", owner: string): Promise<{
       // withMetadata: false,
     },
   });
-  console.log(res.data)
-  return res.data.result.list
+  // console.debug(res)
+  if (space === "evm") {
+    return res.data.result.list
+  }
+  return res.data.data.list
 }
 
 export { scanUrl, nftUrl, queryNfts };

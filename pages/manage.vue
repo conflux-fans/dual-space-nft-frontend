@@ -1,5 +1,5 @@
 <template>
-  <nft-panel></nft-panel>
+  <nft-panel space="evm"></nft-panel>
   <SetCoreOwnerCard />
 
 </template>
