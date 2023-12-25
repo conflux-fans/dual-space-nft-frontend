@@ -139,7 +139,7 @@ const setOrReset = ref("set" as "set" | "reset")
       </n-input-group>
       <span v-else>
         The resetted core owner will be the core contract 
-        <a _target="blank" :href='scanUrl("core", "address", coreOwnerHexAddress)'>{{ coreOwnerHexAddress }}</a>
+        <a _target="blank" :href='scanUrl("core", "address", coreOwnerHexAddress)'>{{coreOwnerAddress}}{{ runtimeConfig.public.coreContractAddress }} </a> (<b>{{ coreOwnerHexAddress }}</b> in hex)
       </span>
       <n-button type="info" :disabled="!canSendMetatransaction" @click="sendMetatransaction">
         Send Metatransaction
