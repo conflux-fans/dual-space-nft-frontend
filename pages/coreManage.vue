@@ -7,7 +7,7 @@
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig()
 
-const scanCardExtraContent = `Set Evm Owner to ${runtimeConfig.public.evmContractAddress} to enable core space transfer`
+const scanCardExtraContent = `If you want to enable core space transfer, set evm owner to ${runtimeConfig.public.evmContractAddress}`
 </script>
 <style scoped>
 .n-card {

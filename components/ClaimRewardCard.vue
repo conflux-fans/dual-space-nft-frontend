@@ -12,7 +12,7 @@ import { Conflux, format } from "js-conflux-sdk";
 // @ts-ignore
 import { Contract } from "js-conflux-sdk/src/contract";
 import { abi as poolAbi } from '@/assets/metadata/ContributorRewardsPool.json'
-import { useAccount as useCfxAccount, provider, Unit } from "@cfxjs/use-wallet-vue3/conflux";
+import { useAccount as useCfxAccount, provider } from "@cfxjs/use-wallet-vue3/conflux";
 import {
   useCoreNfts,
 } from "~/composables/sdk";
