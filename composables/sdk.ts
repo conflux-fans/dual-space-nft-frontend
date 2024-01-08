@@ -114,10 +114,15 @@ const useEvmNfts = () => useState<{
   tokenId: string,
   contract: string
 }[]>("evmNfts", () => [])
+const useCoreNfts = () => useState<{
+  tokenId: string,
+  contract: string
+}[]>("coreNfts", () => [])
 
 export {
   useCoreSdk,
   useEvmNfts,
+  useCoreNfts,
   useRandomCoreSender,
   doMintFromCoreRandom,
   constructMetatransaction,

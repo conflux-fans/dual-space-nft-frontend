@@ -242,6 +242,7 @@ async function doMint() {
     console.trace(e);
     notification.error({ content: e.message });
     if (e?.response?.data?.detail)
+      
       notification.error({ content: e.response.data.detail });
   }
 }

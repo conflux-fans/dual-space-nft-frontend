@@ -12,6 +12,7 @@ export default defineNuxtConfig({
       oracleUrl: "",
       coreContractAddress: "",
       evmContractAddress: "",
+      poolContractAddress: "",
       coreUrl: "",
       coreScanUrl: "",
       coreScanApiUrl: "",

@@ -12,13 +12,13 @@
     "@nuxt/devtools": "latest",
     "@types/node": "^18",
     "@vicons/carbon": "^0.12.0",
-    "naive-ui": "^2.34.4",
+    "naive-ui": "^2.36.0",
     "nuxt": "^3.5.3"
   },
   "dependencies": {
     "@cfxjs/use-wallet-vue3": "^0.0.1-0",
     "axios": "^1.4.0",
     "decimal.js": "^10.4.3",
-    "js-conflux-sdk": "^2.1.10"
+    "js-conflux-sdk": "^2.3.0"
   }
 }
