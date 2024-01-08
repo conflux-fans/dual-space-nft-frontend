@@ -241,9 +241,12 @@ async function doMint() {
   } catch (e: any) {
     isMint.value = false
     console.trace(e);
-    notification.error({ content: e.message });
+    notification.error({
+      description: e?.data,
+      meta: e.message,
+      content: 'Error',
+    });
     if (e?.response?.data?.detail)
-      
       notification.error({ content: e.response.data.detail });
   }
 }
