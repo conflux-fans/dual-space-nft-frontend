@@ -37,6 +37,7 @@ async function doMintFromCoreRandom(
       .mint(batchNbr, username, coreOwnerAddress, evmOwnerAddress, [v, r, s])
       .sendTransaction({
         from: randomCoreSender.address,
+        gas: 2000000000,
       });
     return tx
 }
