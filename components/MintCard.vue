@@ -39,6 +39,7 @@
         </n-input-group>
       </n-collapse-transition>
       <n-collapse-transition :show="mintChoice !== 'core'">
+        WARNING: FC rewards is only claimable on Conflux Core
         <n-input-group>
           <n-input-group-label>Your eSpace Address</n-input-group-label>
           <n-input clearable v-model:value="evmOwnerInput" placeholder="evm owner" />
