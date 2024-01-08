@@ -39,6 +39,7 @@ async function claimReward(tokenId: number) {
   } catch(e: any) {
     console.error(e)
     notification.error({
+      description: e?.data,
       meta: e.message,
       content: 'Error',
     })
