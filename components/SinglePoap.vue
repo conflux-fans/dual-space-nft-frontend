@@ -1,7 +1,7 @@
 <template>
   <n-card title="Poap" size="small" hoverable>
     <n-space>
-      <n-button text @click="toScan">tokenId: {{ tokenId }}</n-button>
+      <n-button text @click="toScan">Token ID: {{ tokenId }}</n-button>
       <n-button text @click="copyTokenId">
         <template #icon>
           <svg

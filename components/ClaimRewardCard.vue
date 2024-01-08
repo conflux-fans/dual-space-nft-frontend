@@ -87,7 +87,7 @@ const tokenIdOptions = computed(() => {
     </template>
     <n-space vertical>
       <n-input-group>
-        <n-input-group-label>token id</n-input-group-label>
+        <n-input-group-label>Token ID</n-input-group-label>
         <n-select
           v-model:value="tokenId"
           :options="tokenIdOptions"
