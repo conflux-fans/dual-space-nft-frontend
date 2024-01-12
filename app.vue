@@ -33,6 +33,10 @@ import {
   NNotificationProvider,
   NDialogProvider,
 } from "naive-ui";
+
+useHead({
+  title: "Conflux Documentation POAP Portal"
+})
 </script>
 <style>
 html body {
