@@ -23,6 +23,9 @@
         WARNING: core address and espace address shares equal authority.
         Poap will not be transferrable until one side owner is resetted.
       </n-collapse-transition>
+      <n-collapse-transition :show="mintChoice === 'evm'">
+        WARNING: FC rewards is only claimable on Conflux Core
+      </n-collapse-transition>
       <n-collapse-transition :show="mintChoice !== 'evm'">
         <n-input-group>
           <n-input-group-label>Your Core Address</n-input-group-label>
@@ -39,7 +42,6 @@
         </n-input-group>
       </n-collapse-transition>
       <n-collapse-transition :show="mintChoice !== 'core'">
-        WARNING: FC rewards is only claimable on Conflux Core
         <n-input-group>
           <n-input-group-label>Your eSpace Address</n-input-group-label>
           <n-input clearable v-model:value="evmOwnerInput" placeholder="evm owner" />
@@ -227,7 +229,9 @@ async function doMint() {
   try {
     isMint.value = true
     const { username, signature } = await visitOracle();
-
+    notification.info({
+      content: `Minting for ${username}`
+    })
     txHash.value = await doMintFromCoreRandom(
       batchNbr.value,
       username,
