@@ -102,7 +102,7 @@ const tokenIdOptions = computed(() => {
             @click="claimReward(tokenId)">
               Claim {{ amountCanClaim }} FC
           </n-button>
-          <n-button v-else type="info" disabled>
+          <n-button v-else type="info">
             Reward Already Claimed
           </n-button>
         </div>
