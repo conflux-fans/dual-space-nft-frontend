@@ -12,7 +12,7 @@ import { Conflux, format } from "js-conflux-sdk";
 // @ts-ignore
 import { Contract } from "js-conflux-sdk/src/contract";
 import { abi as poolAbi } from '@/assets/metadata/ContributorRewardsPool.json'
-import { useAccount as useCfxAccount, provider } from "@cfxjs/use-wallet-vue3/conflux";
+import { useAccount as useCfxAccount, provider, sendTransaction } from "@cfxjs/use-wallet-vue3/conflux";
 import {
   useCoreNfts,
 } from "~/composables/sdk";
@@ -34,7 +34,11 @@ const rewardsPoolContract: Contract = sdk.Contract({
 
 async function claimReward(tokenId: number) {
   try{
-    const hash = await rewardsPoolContract.claimReward(tokenId).sendTransaction()
+    const data = rewardsPoolContract.claimReward.encodeData([tokenId])
+    const hash = await sendTransaction({
+      data,
+      to: rewardsPoolContract.address,
+    })
     txHash.value = hash
   } catch(e: any) {
     console.error(e)
