@@ -34,8 +34,8 @@ const rewardsPoolContract: Contract = sdk.Contract({
 
 async function claimReward(tokenId: number) {
   try{
-    const hash = await rewardsPoolContract.claimReward(tokenId).sendTransaction({from: cfxAccount.value})
-  txHash.value = hash
+    const hash = await rewardsPoolContract.claimReward(tokenId).sendTransaction()
+    txHash.value = hash
   } catch(e: any) {
     console.error(e)
     notification.error({
