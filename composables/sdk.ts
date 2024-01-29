@@ -42,6 +42,10 @@ async function doMintFromCoreRandom(
     return tx
 }
 
+async function checkMintPermission(batchNbr: number, username: string) {
+  return await coreContract.checkMintPermission(batchNbr, username)
+}
+
 async function getMetatransactionNonce(evmAddress: string) {
   return await coreContract.getMetatransactionNonce(evmAddress).call();
 }
@@ -128,5 +132,6 @@ export {
   doMintFromCoreRandom,
   constructMetatransaction,
   setCoreOwnerUsingMetatransaction,
-  evmOwnerOf
+  evmOwnerOf,
+  checkMintPermission,
 };
